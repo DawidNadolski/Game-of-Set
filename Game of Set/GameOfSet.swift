@@ -61,5 +61,11 @@ class GameOfSet {
                 }
             }
         }
+        cards.shuffle()
     }
+    
+    func getCardInfo (of index: Int) {
+        print("Count: \(cards[index].count), fill: \(cards[index].fill), color: \(cards[index].color), shape: \(cards[index].shape)")
+    }
+    
 }

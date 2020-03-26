@@ -19,6 +19,7 @@ class ViewController: UIViewController {
     @IBAction func touchCard(_ sender: UIButton) {
         if let cardNumber = cardButtons.firstIndex(of: sender) {
             game.chooseCard(at: cardNumber)
+            game.getCardInfo(of: cardNumber)
             updateViewFromModel()
         } else {
             print("Button is not in cardButtons")
@@ -45,11 +46,15 @@ class ViewController: UIViewController {
         for index in 0..<game.visibleCards {
             let button = cardButtons[index]
             button.layer.cornerRadius = 0.0
+            button.layer.borderWidth = 0.0
             var stringTitle = ""
             var shape = ""
+            var color: UIColor = UIColor.clear
             
             if game.selectedCards.contains(game.cards[index]) {
                 button.layer.cornerRadius = 15.0
+                button.layer.borderWidth = 3.0
+                button.layer.borderColor = UIColor.blue.cgColor
             }
             
             let shapeChoice = game.cards[index].shape
@@ -61,7 +66,7 @@ class ViewController: UIViewController {
             case 3:
                 shape = "▲"
             default:
-                print("ViewController_updateViewFromModel: shape switch error")
+                print("ViewController/updateViewFromModel(): shape switch error")
             }
             
             let countChoice = game.cards[index].count
@@ -76,25 +81,34 @@ class ViewController: UIViewController {
                 stringTitle.append(shape)
                 stringTitle.append(shape)
             default:
-                print("ViewController_updateViewFromModel: count switch error")
+                print("ViewController/updateViewFromModel(): count switch error")
             }
-                     
-            var attributedStringTitle = NSAttributedString(string: stringTitle) // To show shape of figure
             
             let colorChoice = game.cards[index].color
             switch colorChoice {
             case 1:
-                button.setTitleColor(#colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1), for: UIControl.State.normal)
+                color = UIColor.red
             case 2:
-                button.setTitleColor(#colorLiteral(red: 0.9607843161, green: 0.7058823705, blue: 0.200000003, alpha: 1), for: UIControl.State.normal)
+                color = UIColor.yellow
             case 3:
-                button.setTitleColor(#colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1), for: UIControl.State.normal)
+                color = UIColor.green
             default:
-                print("ViewController_updateViewFromModel: color switch error")
+                print("ViewController/updateViewFromModel(): color switch error")
             }
             
-            //let fill  = game.cards[index].fill
-            
+            var attributedStringTitle = NSAttributedString(string: "")
+            let fillChoice = game.cards[index].fill
+            switch fillChoice {
+            case 1:
+                attributedStringTitle = NSAttributedString(string: stringTitle, attributes: [.foregroundColor: color])
+            case 2:
+                attributedStringTitle = NSAttributedString(string: stringTitle, attributes: [.strokeWidth: 5.0, .foregroundColor: color])
+            case 3:
+                attributedStringTitle = NSAttributedString(string: stringTitle, attributes: [.strokeWidth: 5.0, .backgroundColor: color])
+            default:
+                print("ViewController/updateViewFromModel(): color switch error")
+            }
+                        
             button.setAttributedTitle(attributedStringTitle, for: UIControl.State.normal)
         }
     }
