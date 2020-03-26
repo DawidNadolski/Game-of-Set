@@ -12,7 +12,8 @@ class GameOfSet {
     
     var selectedCards = [Card]()
     var cards = [Card]()
-    var visibleCards = 12;
+    var cardsInGame = 12;
+    var score = 0;
     
     func chooseCard(at index: Int) {
         let card = cards[index]
@@ -20,6 +21,7 @@ class GameOfSet {
         if selectedCards.contains(card) {
             if let indexOfSelectedCard = selectedCards.firstIndex(of: card) {
                 selectedCards.remove(at: indexOfSelectedCard)
+                score -= 1
             } else {
                 print("GameOfSet_chooseCard: removing selection error")
             }
@@ -34,10 +36,15 @@ class GameOfSet {
                     cards.remove(at: index1!)
                     cards.remove(at: index2!)
                     cards.remove(at: index3!)
+                    cardsInGame -= 3
+                    score += 5
+                    
+                } else {
+                    score -= 3
                 }
                 selectedCards = []
-            }
-            
+                print("Selected 3 cards")
+            }            
         }
     }
     
@@ -66,6 +73,10 @@ class GameOfSet {
     
     func getCardInfo (of index: Int) {
         print("Count: \(cards[index].count), fill: \(cards[index].fill), color: \(cards[index].color), shape: \(cards[index].shape)")
+    }
+    
+    func getScore() -> Int {
+        return score
     }
     
 }

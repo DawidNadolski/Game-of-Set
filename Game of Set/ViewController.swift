@@ -15,11 +15,17 @@ class ViewController: UIViewController {
     @IBOutlet weak var dealThreeCardsButton: UIButton!
     @IBOutlet var cardButtons: [UIButton]!
     @IBOutlet weak var scoreLabel: UILabel!
+    var score = 0 {
+        didSet {
+            scoreLabel.text = "Score: \(score)"
+        }
+    }
     
     @IBAction func touchCard(_ sender: UIButton) {
         if let cardNumber = cardButtons.firstIndex(of: sender) {
-            game.chooseCard(at: cardNumber)
             game.getCardInfo(of: cardNumber)
+            game.chooseCard(at: cardNumber)
+            score = game.getScore()
             updateViewFromModel()
         } else {
             print("Button is not in cardButtons")
@@ -27,10 +33,10 @@ class ViewController: UIViewController {
     }
     
     @IBAction func dealThreeCards(_ sender: UIButton) {
-        game.visibleCards += 3
+        game.cardsInGame += 3
         updateViewFromModel()
         
-        if game.visibleCards + 3 > 24 {
+        if game.cardsInGame + 3 > 24 {
             dealThreeCardsButton.isEnabled = false
         } else {
             dealThreeCardsButton.isEnabled = true
@@ -40,10 +46,15 @@ class ViewController: UIViewController {
     @IBAction func newGame(_ sender: UIButton) {
         game = GameOfSet()
         updateViewFromModel()
+        
+        for index in 12..<23 {
+            let button = cardButtons[index]
+            button.setAttributedTitle(NSAttributedString(string: ""), for: UIControl.State.normal)
+        }
     }
     
     func updateViewFromModel() {
-        for index in 0..<game.visibleCards {
+        for index in 0..<game.cardsInGame {
             let button = cardButtons[index]
             button.layer.cornerRadius = 0.0
             button.layer.borderWidth = 0.0
